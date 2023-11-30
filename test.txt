@@ -1,0 +1,81 @@
+ADD, SUB, ORR, AND, EOR, BIC (With data dependency)
+***** ASEMBLY CODE *****
+ADD R0, R0, #6
+ADD R1, R1, #4
+SUB R2, R0, R1
+AND R3, R0, R1
+ORR R4, R0, R1
+EOR R5, R0, R1
+BIC R6, R0, R1
+***** MACHINE CODE *****
+E2800006
+E2811004
+E0402001
+E0003001
+E1804001
+E0205001
+E1C06001
+---------------
+Load and Store instructions
+***** ASEMBLY CODE *****
+ADD R2, R2, #6
+ADD R1, R1, #4
+STR R2, [R0, #1020]
+LDR R3, [R0, #1020]
+
+***** MACHINE CODE *****
+E2822006
+E2811004
+E58023FC
+E59033FC
+------------------
+Load Hazard
+***** ASEMBLY CODE *****
+ADD R2, R2, #6
+STR R2, [R0, #1020]
+LDR R3, [R0, #1020]
+ADD R4, R3, #4
+
+***** MACHINE CODE *****
+E2822006
+E58023FC
+E59033FC
+E2834004
+----------------
+Barnch 
+***** ASEMBLY CODE *****
+ADD R1,R1, #5
+B T
+ADD R5, R5, #12
+STR R5, [R4,#40]
+LDR R1, [R4,#40]
+AND R8, R1, R3
+T: ADD R6, R1, #4
+***** MACHINE CODE *****
+E2811005
+EA000003
+E285500C
+E5845028
+E5941028
+E0018003
+E2816004
+------------------
+Branch Equal
+
+***** ASEMBLY CODE *****
+ADDS R1,R1, #5
+BEQ T
+ADD R5, R5, #12
+SUB R6, R6, #2
+AND R8, R1, R3
+ORR R9, R9, R1
+T: ADD R6, R1, #4
+***** MACHINE CODE *****
+E2911005
+0A000003
+E285500C
+E2466002
+E0018003
+E1899001
+E2816004
+---------------
